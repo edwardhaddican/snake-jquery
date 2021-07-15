@@ -249,21 +249,21 @@ $(document).keydown(function (e) {
   //e.which is set by jQuery for those browsers that do not normally support e.keyCode.
   let keyCode = e.keyCode || e.which;
 
-  if (keyCode == 38) {
+  if (keyCode === 38 || keyCode === 87 ) {
     console.log("Up arrow key hit.");
     upArrowKey();
   }
 
-  if (keyCode == 39) {
+  if (keyCode === 39 || keyCode === 68 ) {
     console.log("Right arrow key hit.");
     rightArrowKey();
   }
-  if (keyCode == 40) {
+  if (keyCode === 40 || keyCode === 83 ) {
     console.log("Down arrow key hit.");
     downArrowKey();
   }
 
-  if (keyCode == 37) {
+  if (keyCode === 37 || keyCode === 65 ) {
     console.log("Left arrow key hit.");
     leftArrowKey();
   }
