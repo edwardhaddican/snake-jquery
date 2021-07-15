@@ -4,6 +4,10 @@
   box-sizing: border-box;
 } */
 
+.hidden{
+  display: none;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -27,4 +31,27 @@ body {
   /* width: 20px; */
   height: 20px;
   border: 1px solid black;
+}
+
+/* Scoreboard*/
+.scoreboard{
+  display: flex;
+  /* justify-content: space-around; */
+}
+
+.currentScore-header{
+  margin-right: 10rem;
+  display: flex;
+}
+
+.highScore-header{
+  display: flex;
+}
+
+.currentScore{
+  margin-left: .5rem;
+}
+
+.highScore{
+  margin-left: .5rem;
 }

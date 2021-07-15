@@ -7,12 +7,22 @@ const snake = {
   ],
   nextDirection: [1, 0],
   justEaten: false,
+  isAlive: true,
 };
+
+//directions
+// [0,0] up
+// [1,0] right
+// [1,1] down
+// [0,1] left
 
 const gameState = {
   apple: [5, 3],
   snake: snake,
   intervalId: null,
+  isAlive: true,
+  highScore: 0,
+  currentScore: 0,
 };
 
 // make grid
@@ -57,6 +67,8 @@ let initialState = {
     ],
     nextDirection: [1, 0],
     justEaten: false,
+    highScore: 0,
+    currentScore: 0,
   },
 };
 
@@ -72,21 +84,47 @@ function renderState() {
   const snake = gameState.snake.body;
   const apple = gameState.apple;
 
+  let appleX = apple[0];
+  let appleY = apple[1];
+  let appleCoord = `#${appleX}-${appleY}`;
+
+  //rendering the apple
+  let appleCell = $(`${appleCoord}`);
+  appleCell.css("background", "red");
+
+  //rendering the snake
   for (let i = 0; i < snake.length; i++) {
-    // console.log("snake", snake[i]);
     let xCoord = snake[i][0];
     let yCoord = snake[i][1];
-    let coord = `#${xCoord}-${yCoord}`;
-    let snakeCell = $(`${coord}`);
-    // console.log($("#10-7").css('background', 'blue'), 'background')
-    snakeCell.css("background", "green");
-    // console.log(snakeCell.attr("id"));
-  }
+    let snakeCoord = `#${xCoord}-${yCoord}`;
 
-  for (let j = 0; j < apple.length; j++) {
-    let appleId = apple[j];
-    let appleCell = $(`#${appleId}`);
-    appleCell.css("background", "red");
+    let snakeCell = $(`${snakeCoord}`);
+
+    if (xCoord > 20 || xCoord < 0) {
+      gameState.snake.isAlive = false;
+    }
+
+    if (yCoord > 20 || yCoord < 0) {
+      gameState.snake.isAlive = false;
+    }
+
+    if (gameState.snake.isAlive === false) {
+      $(".gameOverMessage").removeClass("hidden");
+      clearInterval(gameState.intervalId);
+    } else {
+      snakeCell.css("background", "green");
+    }
+
+    //checking if the current score is greater than the highScore
+    if (gameState.currentScore > gameState.highScore) {
+      gameState.highScore = gameState.currentScore;
+    }
+
+    //setting the current and high score
+    $(".currentScore").text(gameState.currentScore);
+    $(".highScore").text(gameState.highScore);
+
+    snakeCell.css("background", "green");
   }
 }
 
@@ -103,10 +141,20 @@ function moveSnake() {
   let backOfSnakeX = gameState.snake.body[0][0];
   let backOfSnakeY = gameState.snake.body[0][1];
   let backOfSnake = `#${backOfSnakeX}-${backOfSnakeY}`;
-  // console.log('move snake', frontOfSnake)
+
+  gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
+
+  //check if the snake ate an apple
+  if (
+    frontOfSnakeX === gameState.apple[0] &&
+    frontOfSnakeY === gameState.apple[1]
+  ) {
+    gameState.snake.justEaten = true;
+    gameState.currentScore += 1;
+  }
+
   if (gameState.snake.justEaten) {
-    gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
-    // console.log(gameState.snake.body);
+    gameState.snake.justEaten = false;
   } else {
     gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
 
@@ -116,8 +164,6 @@ function moveSnake() {
       $(`${backOfSnake}`).css("background", "rgb(0,0,0,0");
     }
 
-  
-
     //make a stop condition if the snake gets out of bounds
 
     gameState.snake.body.shift();
@@ -126,7 +172,7 @@ function moveSnake() {
 
 //on Reset
 function resetGame() {
-  gameState.apple = [66];
+  gameState.apple = [5, 3];
   gameState.snake = {
     body: [
       [8, 10],
@@ -136,9 +182,12 @@ function resetGame() {
     ],
     nextDirection: [1, 0],
     justEaten: false,
+    isAlive: true,
+    currentScore: 0,
   };
   $(".grid").empty();
   makeGrid();
+  $(".gameOverMessage").addClass("hidden");
   clearInterval(gameState.intervalId);
   renderState();
 }
@@ -175,3 +224,47 @@ $(".controls .start").click(start);
 // for moving up 21 needs to be subtracted
 // left is -1
 // right is +1
+
+function upArrowKey() {
+  gameState.nextDirection = [0, 0];
+  console.log(gameState.nextDirection);
+}
+
+function rightArrowKey() {
+  gameState.nextDirection = [1, 0];
+  console.log(gameState.nextDirection);
+}
+
+function downArrowKey() {
+  gameState.nextDirection = [1, 1];
+  console.log(gameState.nextDirection);
+}
+
+function leftArrowKey() {
+  gameState.nextDirection = [0, 1];
+  console.log(gameState.nextDirection);
+}
+
+$(document).keydown(function (e) {
+  //e.which is set by jQuery for those browsers that do not normally support e.keyCode.
+  let keyCode = e.keyCode || e.which;
+
+  if (keyCode == 38) {
+    console.log("Up arrow key hit.");
+    upArrowKey();
+  }
+
+  if (keyCode == 39) {
+    console.log("Right arrow key hit.");
+    rightArrowKey();
+  }
+  if (keyCode == 40) {
+    console.log("Down arrow key hit.");
+    downArrowKey();
+  }
+
+  if (keyCode == 37) {
+    console.log("Left arrow key hit.");
+    leftArrowKey();
+  }
+});
