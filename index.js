@@ -132,7 +132,8 @@ function renderState() {
 
 // on Start
 function start() {
-  gameState.intervalId = setInterval(tick, 1000 / 30);
+  // gameState.intervalId = setInterval(tick, 1000 / 30);
+  gameState.intervalId = setInterval(tick, 1000 / 10);
 }
 
 function moveSnake() {
@@ -142,7 +143,25 @@ function moveSnake() {
   let backOfSnakeY = gameState.snake.body[0][1];
   let backOfSnake = `#${backOfSnakeX}-${backOfSnakeY}`;
 
-  gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
+  let currentDirection = gameState.snake.nextDirection;
+  console.log(currentDirection);
+  if (currentDirection[0] === 0 && currentDirection[1] === 0) {
+    //up
+    console.log([frontOfSnakeX, frontOfSnakeY - 1]);
+    gameState.snake.body.push([frontOfSnakeX, frontOfSnakeY - 1]);
+  } else if (currentDirection[0] === 1 && currentDirection[1] === 0) {
+    //right
+    // console.log([frontOfSnakeX, frontOfSnakeY - 1])
+    gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
+  } else if (currentDirection[0] === 1 && currentDirection[1] === 1) {
+    //down
+    gameState.snake.body.push([frontOfSnakeX, frontOfSnakeY + 1]);
+  } else if (currentDirection[0] === 0 && currentDirection[1] === 1) {
+    //left
+    gameState.snake.body.push([frontOfSnakeX - 1, frontOfSnakeY]);
+  }
+
+  // gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
 
   //check if the snake ate an apple
   if (
@@ -153,19 +172,17 @@ function moveSnake() {
     gameState.currentScore += 1;
   }
 
+  //adjust tail accordingly
   if (gameState.snake.justEaten) {
     gameState.snake.justEaten = false;
   } else {
-    gameState.snake.body.push([frontOfSnakeX + 1, frontOfSnakeY]);
+    console.log("in else? ", backOfSnake);
 
     if ($(backOfSnake).hasClass("gray")) {
       $(`${backOfSnake}`).css("background", "gray");
     } else {
       $(`${backOfSnake}`).css("background", "rgb(0,0,0,0");
     }
-
-    //make a stop condition if the snake gets out of bounds
-
     gameState.snake.body.shift();
   }
 }
@@ -249,21 +266,21 @@ $(document).keydown(function (e) {
   //e.which is set by jQuery for those browsers that do not normally support e.keyCode.
   let keyCode = e.keyCode || e.which;
 
-  if (keyCode === 38 || keyCode === 87 ) {
+  if (keyCode === 38 || keyCode === 87) {
     console.log("Up arrow key hit.");
     upArrowKey();
   }
 
-  if (keyCode === 39 || keyCode === 68 ) {
+  if (keyCode === 39 || keyCode === 68) {
     console.log("Right arrow key hit.");
     rightArrowKey();
   }
-  if (keyCode === 40 || keyCode === 83 ) {
+  if (keyCode === 40 || keyCode === 83) {
     console.log("Down arrow key hit.");
     downArrowKey();
   }
 
-  if (keyCode === 37 || keyCode === 65 ) {
+  if (keyCode === 37 || keyCode === 65) {
     console.log("Left arrow key hit.");
     leftArrowKey();
   }
