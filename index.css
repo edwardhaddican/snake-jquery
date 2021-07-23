@@ -55,3 +55,7 @@ body {
 .highScore{
   margin-left: .5rem;
 }
+
+.apple{
+  background-color: red;
+}
