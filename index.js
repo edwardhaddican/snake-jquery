@@ -46,7 +46,6 @@ function makeGrid() {
     counter++;
 
     if (i % 2 === 1) {
-      newCell.css("background", "gray");
       newCell.addClass("gray");
     }
 
@@ -59,6 +58,7 @@ makeGrid();
 // on Start
 function start() {
   // gameState.intervalId = setInterval(tick, 1000 / 30);
+  resetGame();
   gameState.intervalId = setInterval(tick, 1000 / 10);
 }
 
@@ -97,10 +97,9 @@ function renderState() {
   let appleY = apple[1];
   let appleCoord = `#${appleX}-${appleY}`;
 
-  console.log(appleCoord, '!!!')
   //rendering the apple
   let appleCell = $(`${appleCoord}`);
-  appleCell.addClass('apple');
+  appleCell.css("background", "red");
 
   //rendering the snake
   for (let i = 0; i < snake.length; i++) {
@@ -139,11 +138,9 @@ function renderState() {
     $(".highScore").text(gameState.highScore);
 
     snakeCell.css("background", "green");
-    //maybe next time use a snake class to make transitioning colors neater. 
+    //maybe next time use a snake class to make transitioning colors neater.
   }
 }
-
-
 
 function moveSnake() {
   let frontOfSnakeX = gameState.snake.body[gameState.snake.body.length - 1][0];
@@ -151,7 +148,6 @@ function moveSnake() {
   let backOfSnakeX = gameState.snake.body[0][0];
   let backOfSnakeY = gameState.snake.body[0][1];
   let backOfSnake = `#${backOfSnakeX}-${backOfSnakeY}`;
-
 
   let currentDirection = gameState.snake.nextDirection;
 
@@ -169,14 +165,13 @@ function moveSnake() {
     gameState.snake.body.push([frontOfSnakeX - 1, frontOfSnakeY]);
   }
 
-  let newX =  gameState.snake.body[gameState.snake.body.length - 1][0];
-  let newY =  gameState.snake.body[gameState.snake.body.length - 1][1];
-
+  let newX = gameState.snake.body[gameState.snake.body.length - 1][0];
+  let newY = gameState.snake.body[gameState.snake.body.length - 1][1];
 
   //checking if the snake ate itself and ending the game if this happened
   let newHeadOfSnake = $(`#${newX}-${newY}`);
 
-  if(newHeadOfSnake.css("background-color") === 'rgb(0, 128, 0)'){
+  if (newHeadOfSnake.css("background-color") === "rgb(0, 128, 0)") {
     $(".gameOverMessage2").removeClass("hidden");
     clearInterval(gameState.intervalId);
   }
@@ -190,13 +185,18 @@ function moveSnake() {
     gameState.currentScore += 1;
 
     //remove the current apple
-    $(`#${gameState.apple[0]}-${gameState.apple[1]}`).removeClass('apple')
+    let currentAppleLocation = $(
+      `#${gameState.apple[0]}-${gameState.apple[1]}`
+    );
+
+    if (currentAppleLocation.hasClass("gray")) {
+      currentAppleLocation.css("background", "gray");
+    } else {
+      currentAppleLocation.css("background", "rgb(0,0,0,0");
+    }
+
     //make a new apple
-    randomAppleCoord()
-
-
-
-
+    randomAppleCoord();
   }
 
   //adjust tail accordingly
@@ -243,43 +243,28 @@ function tick() {
   renderState();
 }
 
-
-
-
 $(".controls .reset").click(resetGame);
 $(".controls .start").click(start);
 
-
-function randomAppleCoord(){
-
-  function randomNum(){
-   return Math.floor(Math.random() * 21)
-}
-
-  let xCoord  = randomNum()
-  let yCoord = randomNum()
-
-  let possibleNewAppleCoord = $(`#${xCoord}-${yCoord}`)
-
-  // const snake = gameState.snake.body;
-  // let xCoord = snake[i][0];
-  // let yCoord = snake[i][1];
-  // let snakeCoord = `#${xCoord}-${yCoord}`;
-
-  if(possibleNewAppleCoord.css("background-color") === 'rgb(0, 128, 0)'){
-    randomAppleCoord()
-  } else {
-    gameState.apple = [xCoord, yCoord]
-    console.log(gameState.apple, '!!!')
+function randomAppleCoord() {
+  function randomNum() {
+    return Math.floor(Math.random() * 21);
   }
 
+  let xCoord = randomNum();
+  let yCoord = randomNum();
 
+  let possibleNewAppleCoord = $(`#${xCoord}-${yCoord}`);
 
+  if (possibleNewAppleCoord.css("background-color") === "rgb(0, 128, 0)") {
+    randomAppleCoord();
+  } else {
+    gameState.apple = [xCoord, yCoord];
+    let appleCoord = $(`#${xCoord}-${yCoord}`);
 
+    appleCoord.addClass("apple");
+  }
 }
-
-
-
 
 function upArrowKey() {
   gameState.snake.nextDirection = [0, 0];

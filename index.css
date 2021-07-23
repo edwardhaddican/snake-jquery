@@ -1,10 +1,5 @@
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
 
-.hidden{
+.hidden {
   display: none;
 }
 
@@ -13,7 +8,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #eee;
+  background: rgb(177, 169, 169);
+
 }
 .grid {
   width: 462px;
@@ -34,28 +30,33 @@ body {
 }
 
 /* Scoreboard*/
-.scoreboard{
+.scoreboard {
   display: flex;
   /* justify-content: space-around; */
 }
 
-.currentScore-header{
+.currentScore-header {
   margin-right: 10rem;
   display: flex;
 }
 
-.highScore-header{
+.highScore-header {
   display: flex;
 }
 
-.currentScore{
-  margin-left: .5rem;
+.currentScore {
+  margin-left: 0.5rem;
 }
 
-.highScore{
-  margin-left: .5rem;
+.highScore {
+  margin-left: 0.5rem;
 }
 
-.apple{
+.gray {
+  background-color:gray;
+}
+
+.apple {
   background-color: red;
 }
+
